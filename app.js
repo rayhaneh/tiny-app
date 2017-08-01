@@ -7,21 +7,21 @@ const expressSanitizer    = require("express-sanitizer")
 
 const PORT = process.env.PORT || 8080 // default port 8080
 
+app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()) // should always go after the bodyparser
 app.use(cookieParser())
 
 
-app.set('view engine', 'ejs')
-
-
+// Database
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 }
 
+// Root Route
 app.get("/", (req, res) => {
-  res.end("<html><body>Hello <b>World</b></body></html>\n")
+  res.redirect("/urls")
 })
 
 app.get("/urls.json", (req, res) => {
