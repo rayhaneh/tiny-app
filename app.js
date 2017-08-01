@@ -1,14 +1,14 @@
 // This file holds the express server setup
 const express = require("express")
 const app = express()
-var cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
+const bodyParser = require("body-parser")
+const expressSanitizer    = require("express-sanitizer")
 
 const PORT = process.env.PORT || 8080 // default port 8080
-const bodyParser = require("body-parser");
-const expressSanitizer    = require("express-sanitizer");
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(expressSanitizer()); // should go after the bodyparser
+app.use(expressSanitizer()) // should always go after the bodyparser
 app.use(cookieParser())
 
 
