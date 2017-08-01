@@ -1,4 +1,4 @@
-<!-- views/partials/header.ejs -->
+<!-- views/partials/_header.ejs -->
 
 <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
@@ -18,6 +18,16 @@
     </div>
 </nav>
 
-<form action="/login" method="POST" style="margin:150px;">
-    <input type="text" name="username" id="username" placeholder="username">
-</form>
+<%if (!username) {%>
+    Please login
+    <form action="/login" method="POST" style="margin:150px;">
+        <input type="text" name="username" id="username" placeholder="username">
+        <input type="submit" value="Login">
+    </form>
+<% } else { %>
+    Logined in as: <%- username %>
+    <form action="/logout" method="POST" style="margin:150px;">
+        <input type="submit" value="Logout">
+    </form>
+<% } %>
+
