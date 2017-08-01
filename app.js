@@ -1,6 +1,7 @@
 // This file holds the express server setup
 const express = require("express")
 const app = express()
+var cookieParser = require('cookie-parser')
 
 const PORT = process.env.PORT || 8080 // default port 8080
 const bodyParser = require("body-parser");
@@ -8,6 +9,8 @@ const expressSanitizer    = require("express-sanitizer");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()); // should go after the bodyparser
+app.use(cookieParser())
+
 
 app.set('view engine', 'ejs')
 
@@ -77,8 +80,8 @@ function generateRandomString() {
     for(var i = 0; i < length; i++) {
       shortURL += possible.charAt(Math.floor(Math.random() * possible.length))
     }
-    return shortURL
-  } while (!urlDatabase[shortURL])
+  } while (urlDatabase[shortURL])
+  return shortURL
 }
 
 
