@@ -9,22 +9,19 @@
         </a>
     </div>
 
-    <% if (!username) {%>
-        <form class="navbar-form navbar-right" action="/login" method="POST">
-            <div class="form-group" >
-                <input class="form-control" type="text" name="username" id="username" placeholder="username">
-            </div>
-            <input class="btn btn-default" type="submit" value="Login">
-        </form>
+    <% if (!user) {%>
+        <div class="navbar-right">
+            <a class="btn btn-default" href="/login">Login</a>
+        </div>
     <% } else { %>
 
         <form class="navbar-form navbar-right" action="/logout" method="POST">
             <div class="form-group" >
-                <input class="form-control" type="hidden" name="username" id="username" value="<%- username %>">
+                <input class="form-control" type="hidden" name="username" id="username" value="<%- user.email %>">
             </div>
             <input class="btn btn-default" type="submit" value="Log Out">
         </form>
-        <p class="navbar-text  navbar-right"> Logged in as: <%- username %></p>
+        <p class="navbar-text  navbar-right"> Logged in as: <%- user.email %></p>
     <% } %>
 </nav>
 
