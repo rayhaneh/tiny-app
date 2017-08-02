@@ -19,15 +19,25 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 }
 
-// Root Route
+// ROOT ROUTE
 app.get("/", (req, res) => {
   res.redirect("/urls")
 })
 
+//
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase)
 })
 
+// INDEX ROUTE
+app.post("/urls", (req, res) => {
+  let longURL = req.sanitize(req.body.longURL);
+  shortURL = generateRandomString()
+  urlDatabase[shortURL] = longURL
+  res.redirect(`/urls/${shortURL}`);
+})
+
+// NEW ROUTE
 app.get("/urls/new", (req, res) => {
   let templateVars = {
       username: req.cookies["username"]
@@ -35,19 +45,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new",templateVars);
 })
 
-app.post("/urls", (req, res) => {
-  let longURL = req.sanitize(req.body.longURL);
-  shortURL = generateRandomString()
-  urlDatabase[shortURL] = longURL
-  res.redirect(`/urls/${shortURL}`);         // Respond with 'Ok' (we will replace this)
-
-})
-
-app.post("/urls/:id/delete", (req,res) => {
-  delete urlDatabase[req.params.id]
-  res.redirect("/urls")
-})
-
+// CREATE ROUTE
 app.get("/urls", (req, res) => {
   let templateVars = {
       urls: urlDatabase,
@@ -56,8 +54,8 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 })
 
+// SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
 app.get("/urls/:id", (req, res) => {
-
   let templateVars = {
         shortURL: req.params.id,
         longURL: urlDatabase[req.params.id],
@@ -65,6 +63,8 @@ app.get("/urls/:id", (req, res) => {
   };
   res.render("urls_show", templateVars);
 })
+
+// UPDATE ROUTE (Shouldn't the HTTP VERB be PUT?)
 app.post("/urls/:id", (req, res) => {
   if (urlDatabase[req.params.id]) {
     delete urlDatabase[req.params.id]
@@ -73,16 +73,26 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 })
 
+// DESTROY ROUTE (Shouldn't the route be /urls/:id and the verb delete?)
+app.post("/urls/:id/delete", (req,res) => {
+  delete urlDatabase[req.params.id]
+  res.redirect("/urls")
+})
+
+// REDIRECTION ROUTE
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
   let longURL = urlDatabase[shortURL]
   res.redirect(longURL)
 })
 
+// USER LOGIN ROUTE
 app.post("/login", (req, res) => {
   res.cookie("username",req.body.username)
   res.redirect("/urls")
 })
+
+// USER LOGOUT ROUTE
 app.post("/logout", (req, res) => {
   res.clearCookie("username",req.body.username)
   res.redirect("/urls")
@@ -101,7 +111,7 @@ function generateRandomString() {
   return shortURL
 }
 
-
+// APP LISTENER
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`)
 })
