@@ -4,6 +4,7 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const bodyParser = require("body-parser")
 const expressSanitizer    = require("express-sanitizer")
+const uuidv4 = require('uuid/v4');
 
 const PORT = process.env.PORT || 8080 // default port 8080
 
@@ -14,12 +15,23 @@ app.use(cookieParser())
 
 
 // Database
-let urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 }
 
-let users = {}
+const users = {
+  "b957e91f-13c5-47be-bcee-850052d2de14": {
+    id: "b957e91f-13c5-47be-bcee-850052d2de14",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "87981921-7669-49ef-9591-50463212301c": {
+    id: "87981921-7669-49ef-9591-50463212301c",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 
 
@@ -112,7 +124,12 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  console.log(req.body.email,req.body.password)
+  let id = uuidv4();
+  users[id] = {
+      id : uuidv4(),
+      email: req.body.email,
+      password: req.body.password
+    }
   res.redirect("/urls")
 })
 
