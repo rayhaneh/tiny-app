@@ -79,10 +79,8 @@ app.get("/urls/:id", (req, res) => {
 // UPDATE ROUTE (Shouldn't the HTTP VERB be PUT?)
 app.post("/urls/:id", (req, res) => {
   // So what if two users add the same link??
-  if (urlDatabase[req.params.id]) {
-    delete urlDatabase[req.params.id]
-    urlDatabase[generateRandomString(6)] = req.body.longURL
-  }
+  urlDatabase[req.params.id] = req.body.longURL
+
   res.redirect("/urls");
 })
 
