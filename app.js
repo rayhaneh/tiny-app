@@ -55,27 +55,23 @@ app.post("/urls", (req, res) => {
 
 // NEW ROUTE
 app.get("/urls/new", (req, res) => {
-  let templateVars = {
-      username: req.cookies["username"]
-  };
-  res.render("urls_new",templateVars);
+  let user_id = req.cookies["user_id"]
+  res.render("urls_new",{user : users[user_id]});
 })
 
 // CREATE ROUTE
 app.get("/urls", (req, res) => {
-  let templateVars = {
-      urls: urlDatabase,
-      username: req.cookies["username"]
-  };
-  res.render("urls_index", templateVars);
+  let user_id = req.cookies["user_id"]
+  res.render("urls_index", {user : users[user_id], urls: urlDatabase});
 })
 
 // SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
 app.get("/urls/:id", (req, res) => {
+  let user_id = req.cookies["user_id"]
   let templateVars = {
         shortURL: req.params.id,
         longURL: urlDatabase[req.params.id],
-        username: req.cookies["username"]
+        user : users[user_id]
   };
   res.render("urls_show", templateVars);
 })
@@ -104,21 +100,40 @@ app.get("/u/:id", (req, res) => {
 })
 
 // USER LOGIN ROUTE
+app.get("/login", (req, res) => {
+  let user_id = req.cookies["user_id"]
+  res.render("login", {user : users[user_id]})
+})
+
 app.post("/login", (req, res) => {
-  res.cookie("username",req.body.username)
+  let id
+  Object.keys(users).forEach(function(key) {
+    if (users[key].email === req.body.email) {
+      id = key
+    }
+  });
+  res.cookie("user_id",id)
   res.redirect("/urls")
 })
 
 // USER LOGOUT ROUTE
 app.post("/logout", (req, res) => {
-  res.clearCookie("username",req.body.username)
+  let id
+  Object.keys(users).forEach(function(key) {
+      if (users[key].email === req.body.email) {
+        id = key
+      }
+  });
+  res.clearCookie("user_id",id)
   res.redirect("/urls")
 })
 
 // USER REGISTRATION ROUTE
 app.get("/register", (req, res) => {
+  let user_id = req.cookies["user_id"]
   let templateVars = {
-        username: req.cookies["username"]
+        username: req.cookies["username"],
+        user : users[user_id]
   };
   res.render("register", templateVars)
 })
