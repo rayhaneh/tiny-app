@@ -20,7 +20,7 @@
                 <% for (let url in urls ) { %>
                     <tr>
                         <td><%- url%></td>
-                        <td><%-urls[url]%></td>
+                        <td><%-urls[url].longURL%></td>
                         <td>
                             <a class="ui green basic button" href="/urls/<%=url%>">Edit</a>
                         </td>

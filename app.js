@@ -13,20 +13,27 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()) // should always go after the bodyparser
 app.use(cookieParser())
 
-let isLoggedIn
+let loggedInUser
 app.use((req, res, next) => {
-  if (req.cookies["user_id"]) {
-    isLI = true
+  userID = req.cookies["user_id"]
+  if (userID) {
+    loggedInUser = userID
   } else {
-    isLI = false
+    loggedInUser = ""
   }
   next()
 })
 
 // Database
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID:  "b957e91f-13c5-47be-bcee-850052d2de14"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID:  "87981921-7669-9591-49ef-50463212301c"
+  }
 }
 
 const users = {
@@ -62,23 +69,24 @@ app.get("/urls.json", (req, res) => {
 app.post("/urls", (req, res) => {
   let longURL = req.sanitize(req.body.longURL);
   shortURL = generateRandomString(6)
-  urlDatabase[shortURL] = longURL
-  res.redirect(`/urls/${shortURL}`);
+  urlDatabase[shortURL] = {
+    longURL: longURL,
+    userID: loggedInUser
+  }
+  res.redirect('/urls'); // Should it redirect to the new record's page?
 })
 
 // NEW ROUTE
 app.get("/urls/new", (req, res) => {
-    console.log(isLI)
   let user_id = req.cookies["user_id"]
-  if (isLoggedIn) {
+  if (loggedInUser) {
     res.render("urls_new",{user : users[user_id]});
   } else {
     res.render("login", {user : users[user_id]})
   }
-
 })
 
-// CREATE ROUTE
+// READ ROUTE
 app.get("/urls", (req, res) => {
   let user_id = req.cookies["user_id"]
   res.render("urls_index", {user : users[user_id], urls: urlDatabase});
@@ -89,7 +97,7 @@ app.get("/urls/:id", (req, res) => {
   let user_id = req.cookies["user_id"]
   let templateVars = {
         shortURL: req.params.id,
-        longURL: urlDatabase[req.params.id],
+        longURL: urlDatabase[req.params.id].longURL,
         user : users[user_id]
   };
   res.render("urls_show", templateVars);
@@ -98,7 +106,7 @@ app.get("/urls/:id", (req, res) => {
 // UPDATE ROUTE (Shouldn't the HTTP VERB be PUT?)
 app.post("/urls/:id", (req, res) => {
   // So what if two users add the same link??
-  urlDatabase[req.params.id] = req.body.longURL
+  urlDatabase[req.params.id].longURL = req.body.longURL
 
   res.redirect("/urls");
 })
@@ -112,7 +120,7 @@ app.post("/urls/:id/delete", (req,res) => {
 // REDIRECTION ROUTE
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
-  let longURL = urlDatabase[shortURL]
+  let longURL = urlDatabase[shortURL].longURL
   res.redirect(longURL)
 })
 
