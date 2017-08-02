@@ -140,7 +140,7 @@ app.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password
       }
-    res.cookie("username",req.body.email)
+    res.cookie("user_id",id)
     res.redirect("/urls")
   }
 })
