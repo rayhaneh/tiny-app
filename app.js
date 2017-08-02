@@ -14,10 +14,14 @@ app.use(cookieParser())
 
 
 // Database
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 }
+
+let users = {}
+
+
 
 // ROOT ROUTE
 app.get("/", (req, res) => {
