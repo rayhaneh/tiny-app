@@ -124,8 +124,14 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  console.log()
-  if (!req.body.email || !req.body.password){
+  let emailExists = false
+  Object.keys(users).forEach(function(key) {
+      if (users[key].email === req.body.email) {
+        return  emailExists = true
+      }
+  });
+
+  if (!req.body.email || !req.body.password || emailExists){
     res.status(400).send('Something broke!');
   } else {
     let id = uuidv4();
