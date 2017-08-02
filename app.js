@@ -107,13 +107,26 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   let id
+  let pass = false
+  if (!req.body.email || !req.body.password) {
+    return res.status(403).send('the email or password fields are empty');
+  }
   Object.keys(users).forEach(function(key) {
     if (users[key].email === req.body.email) {
       id = key
+      if (users[key].password === req.body.password) {
+        pass = true
+      }
     }
   });
-  res.cookie("user_id",id)
-  res.redirect("/urls")
+  if (!id){
+    res.status(403).send('User does not exist');
+  } else if (!pass) {
+    res.status(403).send('Password is not correct');
+  } else {
+    res.cookie("user_id",id)
+    res.redirect("/urls")
+  }
 })
 
 // USER LOGOUT ROUTE
@@ -132,7 +145,6 @@ app.post("/logout", (req, res) => {
 app.get("/register", (req, res) => {
   let user_id = req.cookies["user_id"]
   let templateVars = {
-        username: req.cookies["username"],
         user : users[user_id]
   };
   res.render("register", templateVars)
