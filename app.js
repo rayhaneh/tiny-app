@@ -66,6 +66,7 @@ app.get("/urls/:id", (req, res) => {
 
 // UPDATE ROUTE (Shouldn't the HTTP VERB be PUT?)
 app.post("/urls/:id", (req, res) => {
+  // So what if two users add the same link??
   if (urlDatabase[req.params.id]) {
     delete urlDatabase[req.params.id]
     urlDatabase[generateRandomString(6)] = req.body.longURL
@@ -95,6 +96,19 @@ app.post("/login", (req, res) => {
 // USER LOGOUT ROUTE
 app.post("/logout", (req, res) => {
   res.clearCookie("username",req.body.username)
+  res.redirect("/urls")
+})
+
+// USER REGISTRATION ROUTE
+app.get("/register", (req, res) => {
+  let templateVars = {
+        username: req.cookies["username"]
+  };
+  res.render("register", templateVars)
+})
+
+app.post("/register", (req, res) => {
+  console.log(req.body.email,req.body.password)
   res.redirect("/urls")
 })
 

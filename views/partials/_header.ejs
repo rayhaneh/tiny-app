@@ -1,34 +1,31 @@
 <!-- views/partials/_header.ejs -->
 
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
 
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
-                EJS Is Fun
-            </a>
-        </div>
-
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-        </ul>
-
+<nav class="navbar navbar-default">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">
+            <span class="glyphicon glyphicon-resize-small"></span>
+            TinyApp
+        </a>
     </div>
+
+    <% if (!username) {%>
+        <form class="navbar-form navbar-right" action="/login" method="POST">
+            <div class="form-group" >
+                <input class="form-control" type="text" name="username" id="username" placeholder="username">
+            </div>
+            <input class="btn btn-default" type="submit" value="Login">
+        </form>
+    <% } else { %>
+
+        <form class="navbar-form navbar-right" action="/logout" method="POST">
+            <div class="form-group" >
+                <input class="form-control" type="hidden" name="username" id="username" value="<%- username %>">
+            </div>
+            <input class="btn btn-default" type="submit" value="Log Out">
+        </form>
+        <p class="navbar-text  navbar-right"> Logged in as: <%- username %></p>
+    <% } %>
 </nav>
 
-<%if (!username) {%>
-    Please login
-    <form action="/login" method="POST" style="margin:150px;">
-        <input type="text" name="username" id="username" placeholder="username">
-        <input type="submit" value="Login">
-    </form>
-<% } else { %>
-    Logined in as: <%- username %>
-    <form action="/logout" method="POST" style="margin:150px;">
-        <input type="hidden" name="username" id="username" value="<%- username %>">
-        <input type="submit" value="Logout">
-    </form>
-<% } %>
 
