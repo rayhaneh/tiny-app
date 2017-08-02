@@ -124,13 +124,19 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  let id = uuidv4();
-  users[id] = {
-      id : uuidv4(),
-      email: req.body.email,
-      password: req.body.password
-    }
-  res.redirect("/urls")
+  console.log()
+  if (!req.body.email || !req.body.password){
+    res.status(400).send('Something broke!');
+  } else {
+    let id = uuidv4();
+    users[id] = {
+        id : uuidv4(),
+        email: req.body.email,
+        password: req.body.password
+      }
+    res.cookie("username",req.body.email)
+    res.redirect("/urls")
+  }
 })
 
 
