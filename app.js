@@ -4,8 +4,8 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const bodyParser = require("body-parser")
 const expressSanitizer    = require("express-sanitizer")
-const uuidv4 = require('uuid/v4');
-
+const uuidv4 = require('uuid/v4')
+const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 8080 // default port 8080
 
 app.set('view engine', 'ejs')
@@ -40,17 +40,20 @@ const users = {
   "b957e91f-13c5-47be-bcee-850052d2de14": {
     id: "b957e91f-13c5-47be-bcee-850052d2de14",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    //password: "purple-monkey-dinosaur"
+    password: "$2a$10$bOPX2gFGLE8FpEJHYp/WM.ZjKcv0i/qolRuw64NK8rN8Lg4GDXOs."
   },
  "87981921-7669-49ef-9591-50463212301c": {
     id: "87981921-7669-49ef-9591-50463212301c",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    // password: "dishwasher-funk"
+    password: "$2a$10$ytvq6lwHOY2/UuqYU7JrIezopG0WeGI48xn.eyM9jJMqT2JLFziEy"
   },
    "87981921-7669-9591-49ef-50463212301c": {
     id: "87981921-7669-9591-49ef-50463212301c",
     email: "test@email.com",
-    password: "test"
+    // password: "test"
+    password: "$2a$10$.P/in.uHjOq7BMREgpMnjecU4UDCNRtEA0YwkIOthGw2Ut4EDkHT."
   }
 }
 
@@ -155,7 +158,7 @@ app.post("/login", (req, res) => {
   Object.keys(users).forEach(function(key) {
     if (users[key].email === req.body.email) {
       id = key
-      if (users[key].password === req.body.password) {
+      if (bcrypt.compareSync(req.body.password,users[key].password)) {
         pass = true
       }
     }
