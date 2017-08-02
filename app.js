@@ -66,14 +66,9 @@ app.get("/urls.json", (req, res) => {
 })
 
 // INDEX ROUTE
-app.post("/urls", (req, res) => {
-  let longURL = req.sanitize(req.body.longURL);
-  shortURL = generateRandomString(6)
-  urlDatabase[shortURL] = {
-    longURL: longURL,
-    userID: loggedInUser
-  }
-  res.redirect('/urls'); // Should it redirect to the new record's page?
+app.get("/urls", (req, res) => {
+  let user_id = req.cookies["user_id"]
+  res.render("urls_index", {user : users[user_id], urls: urlDatabase});
 })
 
 // NEW ROUTE
@@ -86,10 +81,16 @@ app.get("/urls/new", (req, res) => {
   }
 })
 
-// READ ROUTE
-app.get("/urls", (req, res) => {
-  let user_id = req.cookies["user_id"]
-  res.render("urls_index", {user : users[user_id], urls: urlDatabase});
+// CREATE ROUTE
+app.post("/urls", (req, res) => {
+  // should this check if the user is logged in or not?
+  let longURL = req.sanitize(req.body.longURL);
+  shortURL = generateRandomString(6)
+  urlDatabase[shortURL] = {
+    longURL: longURL,
+    userID: loggedInUser
+  }
+  res.redirect('/urls'); // Should it redirect to the new record's page?
 })
 
 // SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
