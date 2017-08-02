@@ -68,7 +68,7 @@ app.get("/urls.json", (req, res) => {
 // INDEX ROUTE
 app.get("/urls", (req, res) => {
   let user_id = req.cookies["user_id"]
-  res.render("urls_index", {user : users[user_id], urls: urlDatabase});
+  res.render("urls_index", {user : users[user_id], urls: urlsForUser(user_id)});
 })
 
 // NEW ROUTE
@@ -96,26 +96,41 @@ app.post("/urls", (req, res) => {
 // SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
 app.get("/urls/:id", (req, res) => {
   let user_id = req.cookies["user_id"]
-  let templateVars = {
-        shortURL: req.params.id,
-        longURL: urlDatabase[req.params.id].longURL,
-        user : users[user_id]
-  };
-  res.render("urls_show", templateVars);
+  let shortURL = req.params.id
+  let longURL =  urlDatabase[req.params.id].longURL
+  if (loggedInUser === urlDatabase[shortURL].userID) {
+    let templateVars = {
+          shortURL: shortURL,
+          longURL: longURL,
+          user : users[user_id]
+    };
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(404).send('you are not logged in or the ShortURL does not exist or you are not the owner of the link');
+  }
 })
 
 // UPDATE ROUTE (Shouldn't the HTTP VERB be PUT?)
 app.post("/urls/:id", (req, res) => {
   // So what if two users add the same link??
-  urlDatabase[req.params.id].longURL = req.body.longURL
-
-  res.redirect("/urls");
+  let shortURL = req.params.id
+  if (loggedInUser === urlDatabase[shortURL].userID) {
+    urlDatabase[shortURL].longURL = req.body.longURL
+    res.redirect("/urls");
+  } else {
+    res.status(404).send('you are not logged in or the ShortURL does not exist or you are not the owner of the link');
+  }
 })
 
 // DESTROY ROUTE (Shouldn't the route be /urls/:id and the verb delete?)
 app.post("/urls/:id/delete", (req,res) => {
-  delete urlDatabase[req.params.id]
-  res.redirect("/urls")
+  let shortURL = req.params.id
+  if (loggedInUser === shortURL){
+    delete urlDatabase[shortURL]
+    res.redirect("/urls")
+  } else {
+    res.status(404).send('you are not logged in or the ShortURL does not exist or you are not the owner of the link');
+  }
 })
 
 // REDIRECTION ROUTE
@@ -210,6 +225,17 @@ function generateRandomString(length) {
   return shortURL
 }
 
+
+
+function urlsForUser(id) {
+  let userURLs = {}
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userID === loggedInUser) {
+      userURLs[url] = urlDatabase[url]
+    }
+  }
+  return userURLs
+}
 
 
 // APP LISTENER
