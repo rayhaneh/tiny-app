@@ -32,7 +32,7 @@ app.get("/urls.json", (req, res) => {
 // INDEX ROUTE
 app.post("/urls", (req, res) => {
   let longURL = req.sanitize(req.body.longURL);
-  shortURL = generateRandomString()
+  shortURL = generateRandomString(6)
   urlDatabase[shortURL] = longURL
   res.redirect(`/urls/${shortURL}`);
 })
@@ -68,7 +68,7 @@ app.get("/urls/:id", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   if (urlDatabase[req.params.id]) {
     delete urlDatabase[req.params.id]
-    urlDatabase[generateRandomString()] = req.body.longURL
+    urlDatabase[generateRandomString(6)] = req.body.longURL
   }
   res.redirect("/urls");
 })
@@ -99,8 +99,7 @@ app.post("/logout", (req, res) => {
 })
 
 
-function generateRandomString() {
-  const length    = 6
+function generateRandomString(length) {
   let   shortURL  = ""
   const possible  = "abcdefghijklmnopqrstuvwxyz0123456789"
   do {
