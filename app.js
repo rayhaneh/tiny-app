@@ -13,6 +13,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()) // should always go after the bodyparser
 app.use(cookieParser())
 
+let isLoggedIn
+app.use((req, res, next) => {
+  if (req.cookies["user_id"]) {
+    isLI = true
+  } else {
+    isLI = false
+  }
+  next()
+})
 
 // Database
 const urlDatabase = {
@@ -30,9 +39,13 @@ const users = {
     id: "87981921-7669-49ef-9591-50463212301c",
     email: "user2@example.com",
     password: "dishwasher-funk"
+  },
+   "87981921-7669-9591-49ef-50463212301c": {
+    id: "87981921-7669-9591-49ef-50463212301c",
+    email: "test@email.com",
+    password: "test"
   }
 }
-
 
 
 // ROOT ROUTE
@@ -55,8 +68,14 @@ app.post("/urls", (req, res) => {
 
 // NEW ROUTE
 app.get("/urls/new", (req, res) => {
+    console.log(isLI)
   let user_id = req.cookies["user_id"]
-  res.render("urls_new",{user : users[user_id]});
+  if (isLoggedIn) {
+    res.render("urls_new",{user : users[user_id]});
+  } else {
+    res.render("login", {user : users[user_id]})
+  }
+
 })
 
 // CREATE ROUTE
@@ -181,6 +200,8 @@ function generateRandomString(length) {
   } while (urlDatabase[shortURL])
   return shortURL
 }
+
+
 
 // APP LISTENER
 app.listen(PORT, () => {
