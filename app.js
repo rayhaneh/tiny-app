@@ -21,41 +21,45 @@ app.use(cookieSession({
 }))
 app.use(express.static(__dirname + '/public'));
 
+
+
 app.use((req, res, next) => {
+
+  const currentUser = req.session.user_id
+  const byPath = ["/login", "/register"]
+
+  console.log("Request Path",req.path, req.method)
 
   if (req.path.substring(0,3) === '/u/') {
     next()
     return
   }
-  const currentUser = req.session.user_id
-  // To Use the App Log in or Register
-  const byPath = ["/login", "/register"]
-  if (!currentUser) {
-    if (byPath.indexOf(req.path) === -1) res.redirect("/login")
-    next()
-    return
-  }
   else {
-    req.currentUser = currentUser
-    if (byPath.indexOf(req.path) !== -1) res.redirect("/urls")
-    next()
-    return
+    if (!currentUser) {
+      if (byPath.indexOf(req.path) === -1) res.redirect("/login")
+      next()
+      return
+    }
+    else {
+      req.currentUser = currentUser
+      if (byPath.indexOf(req.path) !== -1) {
+        res.redirect("/urls")
+        console.log("here")
+        return
+      }
+      console.log("after")
+      next()
+      return
+    }
   }
 })
 
-// Database
-const urlDatabase = {
-  "b2xVn2": {
-    longURL: "http://www.lighthouselabs.ca",
-    userID:  "f83e2tny"
-  },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userID:  "5opu9x5n"
-  }
-}
 
-const users = require("./users.json")
+
+
+// Database
+const urlDatabase = require("./urlDatabase.json")
+const users       = require("./users.json")
 
 
 // ROOT ROUTE
@@ -64,9 +68,9 @@ app.get("/", (req, res) => {
 })
 
 //
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase)
-})
+// app.get("/urls.json", (req, res) => {
+//   res.json(urlDatabase)
+// })
 
 // INDEX ROUTE
 app.get("/urls", (req, res) => {
@@ -90,7 +94,7 @@ app.post("/urls", (req, res) => {
     longURL: longURL,
     userID: req.currentUser
   }
-  res.redirect('/urls'); // Should it redirect to the new record's page?
+  res.redirect(`/urls/${shortURL}`); // Should it redirect to the new record's page?
 })
 
 // SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
@@ -98,10 +102,14 @@ app.get("/urls/:id", (req, res) => {
   let shortURL = req.params.id
 
   if (!urlDatabase[shortURL]) {
-    res.status(404).send('The ShortURL does not exist');
+    res.status(404)
+    let error = "The ShortURL does not exist"
+    res.render("error", {user: users[req.currentUser], error: error});
   }
   else if (req.currentUser !== urlDatabase[shortURL].userID) {
-    res.status(404).send('you are not the owner of this short URL');
+    let error = "you are not the owner of this short URL"
+    res.status(404)
+    res.render("error", {user: users[req.currentUser], error: error});
   }
   else {
     let templateVars = {
@@ -118,10 +126,14 @@ app.post("/urls/:id", (req, res) => {
   let shortURL = req.params.id
 
   if (!urlDatabase[shortURL]) {
-    res.status(404).send('The ShortURL does not exist');
+    res.status(404)
+    let error = "The ShortURL does not exist"
+    res.render("error", {user: users[req.currentUser], error: error});
   }
   else if (req.currentUser !== urlDatabase[shortURL].userID) {
-    res.status(404).send('You are not the owner of this short URL');
+    res.status(404)
+    let error = "You are not the owner of this short URL"
+    res.render("error", {user: users[req.currentUser], error: error});
   }
   else {
     urlDatabase[shortURL].longURL = req.body.longURL
@@ -134,10 +146,14 @@ app.post("/urls/:id", (req, res) => {
 app.post("/urls/:id/delete", (req,res) => {
   let shortURL = req.params.id
   if (!urlDatabase[shortURL]) {
-    res.status(404).send('The ShortURL does not exist');
+    res.status(404);
+    let error = "The ShortURL does not exist"
+    res.render("error", {user: users[req.currentUser], error: error});
   }
   else if (req.currentUser !== urlDatabase[shortURL].userID){
-    res.status(404).send('You are not the owner of this short URL');
+    res.status(404)
+    let error = "You are not the owner of this short URL"
+    res.render("error", {user: users[req.currentUser], error: error})
   }
   else {
     delete urlDatabase[shortURL]
@@ -150,8 +166,8 @@ app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
   if (!urlDatabase[shortURL]) {
     res.status(404)
-    let error = 'The link you are looking for does not exist';
-    res.render("error", {user: {}, error: error});
+    let error = 'The short URL you are looking for does not exist';
+    res.render("error", {user: users[req.currentUser], error: error});
   }
   else {
     let longURL  = urlDatabase[shortURL].longURL
@@ -216,17 +232,20 @@ app.post("/register", (req, res) => {
       }
   });
 
-  if (!req.body.email || !req.body.password || emailExists){
-    res.status(400).send('Something broke!');
+  if (!req.body.email || !req.body.password) {
+    res.status(400).send('The email or password field is empty.');
+  } else if (emailExists){
+    res.status(400).send('This email address is already registred.');
   } else {
     let id = generateRandomString(8,users);
     users[id] = {
         id : id,
         email: req.body.email,
-        password: req.body.password
+        password: bcrypt.hashSync(req.body.password,10)
       }
-    req.session.user_id = id
-    res.redirect("/urls")
+    // Comment out this line if you want them to
+    // req.session.user_id = id
+    res.redirect("/login")
   }
 })
 
