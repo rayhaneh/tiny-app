@@ -158,9 +158,13 @@ app.post("/login", (req, res) => {
     }
   });
   if (!id){
-    res.status(403).send('User does not exist');
+    res.status(403)
+    let error = "User does not exist"
+    res.render("error", {user: users[req.currentUser], error: error});
   } else if (!pass) {
-    res.status(403).send('Password is not correct');
+    res.status(403)
+    let error = "Password is not correct"
+    res.render("error", {user: users[req.currentUser], error: error});
   } else {
     req.session.user_id = id
     res.redirect("/urls")
@@ -200,7 +204,9 @@ app.post("/register", (req, res) => {
     let error = "The email or password fields is empty."
     res.render("error", {user: users[req.currentUser], error: error});
   } else if (emailExists){
-    res.status(400).send('This email address is already registred.');
+    res.status(400)
+    let error = "This email address is already registred"
+    res.render("error", {user: users[req.currentUser], error: error});
   } else {
     let id = generateRandomString(8,users);
     users[id] = {
