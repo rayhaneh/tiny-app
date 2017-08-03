@@ -8,9 +8,11 @@ const bcrypt                = require('bcrypt');
 const PORT                  = process.env.PORT || 8080
 app.set('view engine', 'ejs')
 
+
 // MY MODULES
 const generateRandomString  = require("./generateRandomString")
 const urlsForUser           = require("./urlsForUser")
+
 
 // Middlewares
 app.use(bodyParser.urlencoded({extended: true}));
@@ -23,7 +25,6 @@ app.use(express.static(__dirname + '/public'));
 app.use(require("./authentication.js"))
 
 
-
 // Database
 const urlDatabase = require("./urlDatabase.json")
 const users       = require("./users.json")
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
   res.redirect("/urls")
 })
 
+
 // INDEX ROUTE
 app.get("/urls", (req, res) => {
   const templateVars = {
@@ -43,10 +45,12 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 })
 
+
 // NEW ROUTE
 app.get("/urls/new", (req, res) => {
   res.render("urls_new",{user : users[req.currentUser]});
 })
+
 
 // CREATE ROUTE
 app.post("/urls", (req, res) => {
@@ -58,6 +62,7 @@ app.post("/urls", (req, res) => {
   }
   res.redirect(`/urls/${shortURL}`); // Should it redirect to the new record's page?
 })
+
 
 // SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
 app.get("/urls/:id", (req, res) => {
