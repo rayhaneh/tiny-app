@@ -128,3 +128,13 @@ td{
 #newURLLink a:hover{
   background-color: #404040;
 }
+
+.generateButton{
+  font-size: 16px;
+  background-color: #f1563e;
+  color: white;
+}
+.generateButton: hover{
+  background-color: #1D9092;
+  color: white;
+}
