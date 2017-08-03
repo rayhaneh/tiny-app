@@ -3,39 +3,36 @@
 <html lang="en">
     <head>
         <%- include partials/_head.ejs %>
-        <title>TinyApp</title>
     </head>
     <body class="container">
-
         <header>
             <% include partials/_header %>
         </header>
 
+
         <main>
 
+            <h1>Your Tiny URLs </h1>
 
-            <div>
-            <div class="table-responsive">
-              <table class="table">
+              <table>
                 <% for (let url in urls ) { %>
                     <tr>
+
                         <td><%- url%></td>
                         <td><%-urls[url].longURL%></td>
                         <td>
-                            <a class="ui green basic button" href="/urls/<%=url%>">Edit</a>
+                            <a class="" href="/urls/<%=url%>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+Edit</a>
                         </td>
                         <td>
                             <form method="POST" action="/urls/<%- url%>/delete">
-                                <button class="ui red basic button">Delete</button>
+                                <button class=""><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
                             </form>
                         </td>
                     </tr>
                 <% } %>
               </table>
-            </div>
-            <div><a>Make a TinyURL<a></div>
-
-            </div>
+            <h1><a href="/urls/new">Make a TinyURL<a> <i class="fa fa-plus" aria-hidden="true"></i></h1>
 
         </main>
 

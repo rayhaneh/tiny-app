@@ -1,28 +1,24 @@
 <!-- views/partials/_header.ejs -->
 
-
-<nav class="navbar navbar-default">
-    <div class="navbar-header">
-        <a class="navbar-brand" href="#">
-            <span class="glyphicon glyphicon-resize-small"></span>
-            TinyApp
-        </a>
+<div class="container">
+    <div class="heading">
+        <h1 class="brand"><i class="fa fa-external-link-square" aria-hidden="true"></i>
+TinyApp</h1>
+        <% if (!user) {%>
+                <a class="log-button" href="/login">Login</a>
+                <a class="log-button" href="/register">Register</a>
+        <% } else { %>
+            <span>Logged in as: <%- user.email %></span>
+            <form  action="/logout" method="POST">
+                <input type="hidden" name="username" id="username" value="<%- user.email %>">
+                <input type="submit" value="Log Out">
+            </form>
+        <% } %>
     </div>
-    <% if (!user) {%>
-        <div class="navbar-right">
-            <a class="btn btn-default" href="/login">Login</a>
-            <a class="btn btn-default" href="/register">Register</a>
-        </div>
-    <% } else { %>
 
-        <form class="navbar-form navbar-right" action="/logout" method="POST">
-            <div class="form-group" >
-                <input class="form-control" type="hidden" name="username" id="username" value="<%- user.email %>">
-            </div>
-            <input class="btn btn-default" type="submit" value="Log Out">
-        </form>
-        <p class="navbar-text  navbar-right"> Logged in as: <%- user.email %></p>
-    <% } %>
-</nav>
+</div>
+
+
+
 
 

@@ -15,13 +15,14 @@ app.use(cookieSession({
   name: 'session',
   keys: ['abcdefghijklmnopqrstuvwxyz0123456789']
 }))
+app.use(express.static(__dirname + '/public'));
+
 
 
 let loggedInUser
 app.use((req, res, next) => {
-  userID = req.session.user_id
-  if (userID) {
-    loggedInUser = userID
+  if (req.session.user_id) {
+    loggedInUser = req.session.user_id
   } else {
     loggedInUser = ""
   }
@@ -92,7 +93,7 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
   // should this check if the user is logged in or not?
   let longURL = req.sanitize(req.body.longURL);
-  shortURL = generateRandomString(6)
+  let shortURL = generateRandomString(6)
   urlDatabase[shortURL] = {
     longURL: longURL,
     userID: loggedInUser
@@ -104,6 +105,7 @@ app.post("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let user_id = req.session.user_id
   let shortURL = req.params.id
+  console.log(user_id,shortURL)
   let longURL =  urlDatabase[req.params.id].longURL
   if (loggedInUser === urlDatabase[shortURL].userID) {
     let templateVars = {

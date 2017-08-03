@@ -1,0 +1,59 @@
+body{
+  font-family: Roboto;
+}
+.container{
+  margin:0 auto;
+  width: 600px;
+  padding: 0px;
+}
+.log-button{
+  float: right;
+  padding: 10px;
+  color: white;
+}
+.heading{
+  margin-top: 100px;
+  background: #404040;
+  padding: 10px;
+  color: white;
+  border-radius: 5px 5px 0 0;
+}
+main{
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 0 0 5px 5px;
+}
+a{
+  text-decoration: none;
+}
+a:hover{
+  color: #F9B2A7;
+}
+.brand{
+  display: inline;
+}
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    background-color: #f1563e;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button:hover {
+    background-color: #C54633;
+}
