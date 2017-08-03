@@ -9,30 +9,26 @@
             <% include partials/_header %>
         </header>
 
-
         <main>
-
-            <h1>Your Tiny URLs </h1>
-
+            <h3>Your Tiny URLs:</h3>
               <table>
                 <% for (let url in urls ) { %>
                     <tr>
-
                         <td><%- url%></td>
                         <td><%-urls[url].longURL%></td>
                         <td>
-                            <a class="" href="/urls/<%=url%>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            <a class="editButton" href="/urls/<%=url%>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 Edit</a>
                         </td>
                         <td>
                             <form method="POST" action="/urls/<%- url%>/delete">
-                                <button class=""><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+                                <button class="deleteButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
                             </form>
                         </td>
                     </tr>
                 <% } %>
               </table>
-            <h1><a href="/urls/new">Make a TinyURL<a> <i class="fa fa-plus" aria-hidden="true"></i></h1>
+            <h3 id="newURLLink"><a href="/urls/new"><i class="fa fa-plus" aria-hidden="true"></i> Make a New TinyURL</a> </h3>
 
         </main>
 

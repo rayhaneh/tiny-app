@@ -1,17 +1,18 @@
 <!-- views/partials/_header.ejs -->
 
 <div class="container">
+    <div class="logo">
+        <h1 class="brand"><i class="fa fa-external-link-square" aria-hidden="true"></i> TinyApp</h1>
+    </div>
     <div class="heading">
-        <h1 class="brand"><i class="fa fa-external-link-square" aria-hidden="true"></i>
-TinyApp</h1>
         <% if (!user) {%>
-                <a class="log-button" href="/login">Login</a>
-                <a class="log-button" href="/register">Register</a>
+            <a class="logButton" href="/login">Login</a>
+            <a class="logButton" href="/register">Register</a>
         <% } else { %>
             <span>Logged in as: <%- user.email %></span>
-            <form  action="/logout" method="POST">
+            <form  id="logoutForm" action="/logout" method="POST">
                 <input type="hidden" name="username" id="username" value="<%- user.email %>">
-                <input type="submit" value="Log Out">
+                <input id="logoutButton" type="submit" value="Logout">
             </form>
         <% } %>
     </div>

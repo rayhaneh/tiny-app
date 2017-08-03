@@ -33,8 +33,6 @@ app.get("/", (req, res) => {
   res.redirect("/urls")
 })
 
-
-
 // INDEX ROUTE
 app.get("/urls", (req, res) => {
   const templateVars = {
@@ -147,7 +145,9 @@ app.post("/login", (req, res) => {
   let id
   let pass = false
   if (!req.body.email || !req.body.password) {
-    return res.status(403).send('the email or password fields are empty');
+    res.status(403)
+    let error = "The email or password fields is empty."
+    return res.render("error", {user: users[req.currentUser], error: error});
   }
   Object.keys(users).forEach(function(key) {
     if (users[key].email === req.body.email) {
@@ -196,7 +196,9 @@ app.post("/register", (req, res) => {
   });
 
   if (!req.body.email || !req.body.password) {
-    res.status(400).send('The email or password field is empty.');
+    res.status(400)
+    let error = "The email or password fields is empty."
+    res.render("error", {user: users[req.currentUser], error: error});
   } else if (emailExists){
     res.status(400).send('This email address is already registred.');
   } else {
