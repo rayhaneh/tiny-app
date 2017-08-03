@@ -3,7 +3,7 @@ const express               = require("express")
 const app                   = express()
 const cookieSession         = require('cookie-session')
 const bodyParser            = require("body-parser")
-const bcrypt                = require('bcrypt');
+const bcrypt                = require('bcrypt')
 const PORT                  = process.env.PORT || 8080
 app.set('view engine', 'ejs')
 
@@ -14,17 +14,17 @@ const urlsForUser           = require("./urlsForUser")
 
 
 // Middlewares
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieSession({
   name: 'session',
   keys: ['abcdefghijklmnopqrstuvwxyz0123456789']
 }))
-app.use(express.static("public"));
+app.use(express.static("public"))
 
 app.use((req, res, next) => {
 
   const currentUser = req.session.user_id
-  req.currentUser = currentUser
+  req.currentUser   = currentUser
   next()
 })
 
@@ -53,7 +53,7 @@ app.get("/urls", (req, res) => {
       user : users[req.currentUser],
       urls: urlsForUser(req.currentUser,urlDatabase)
     }
-    res.render("urls_index", templateVars);
+    res.render("urls_index", templateVars)
   }
   else {
     let error = "You should login to visit this page."
@@ -81,12 +81,12 @@ app.get("/urls/:id", (req, res) => {
     if (!urlDatabase[shortURL]) {
       res.status(404)
       let error = "The ShortURL does not exist."
-      res.render("error", {user: users[req.currentUser], error: error});
+      res.render("error", {user: users[req.currentUser], error: error})
     }
     else if (req.currentUser !== urlDatabase[shortURL].userID) {
       let error = "This short URL does not belong to you."
       res.status(404)
-      res.render("error", {user: users[req.currentUser], error: error});
+      res.render("error", {user: users[req.currentUser], error: error})
     }
     else {
       let templateVars = {
@@ -94,7 +94,7 @@ app.get("/urls/:id", (req, res) => {
             longURL : urlDatabase[req.params.id].longURL,
             user    : users[req.currentUser]
       }
-      res.render("urls_show", templateVars);
+      res.render("urls_show", templateVars)
     }
   }
   else {
@@ -121,13 +121,13 @@ app.get("/u/:id", (req, res) => {
 // CREATE ROUTE
 app.post("/urls", (req, res) => {
   if (req.currentUser) {
-    let longURL  = req.body.longURL;
+    let longURL  = req.body.longURL
     let shortURL = generateRandomString(6,urlDatabase)
     urlDatabase[shortURL] = {
       longURL: longURL,
       userID: req.currentUser
     }
-    res.redirect(`/urls/${shortURL}`);
+    res.redirect(`/urls/${shortURL}`)
   }
   else {
     const error = "You should login to visit this page."
@@ -144,16 +144,16 @@ app.post("/urls/:id", (req, res) => {
     if (!urlDatabase[shortURL]) {
       res.status(404)
       let error = "The ShortURL does not exist"
-      res.render("error", {user: users[req.currentUser], error: error});
+      res.render("error", {user: users[req.currentUser], error: error})
     }
     else if (req.currentUser !== urlDatabase[shortURL].userID) {
       res.status(404)
       let error = "You are not the owner of this short URL"
-      res.render("error", {user: users[req.currentUser], error: error});
+      res.render("error", {user: users[req.currentUser], error: error})
     }
     else {
       urlDatabase[shortURL].longURL = req.body.longURL
-      res.redirect("/urls");
+      res.redirect("/urls")
     }
   }
   else {
@@ -169,9 +169,9 @@ app.post("/urls/:id/delete", (req,res) => {
     console.log('1',req.currentUser)
     let shortURL = req.params.id
     if (!urlDatabase[shortURL]) {
-      res.status(404);
+      res.status(404)
       let error = "The ShortURL does not exist"
-      res.render("error", {user: users[req.currentUser], error: error});
+      res.render("error", {user: users[req.currentUser], error: error})
     }
     else if (req.currentUser !== urlDatabase[shortURL].userID){
       res.status(404)
@@ -207,7 +207,7 @@ app.get("/register", (req, res) => {
   if (!req.currentUser) {
     let templateVars = {
           user : users[req.currentUser]
-    };
+    }
     res.render("register", templateVars)
   }
   else {
@@ -222,7 +222,7 @@ app.post("/login", (req, res) => {
   if (!req.body.email || !req.body.password) {
     res.status(403)
     let error = "The email or password fields is empty."
-    return res.render("error", {user: users[req.currentUser], error: error});
+    return res.render("error", {user: users[req.currentUser], error: error})
   }
   Object.keys(users).forEach(function(key) {
     if (users[key].email === req.body.email) {
@@ -231,15 +231,15 @@ app.post("/login", (req, res) => {
         pass = true
       }
     }
-  });
+  })
   if (!id){
     res.status(403)
     let error = "User does not exist."
-    res.render("error", {user: users[req.currentUser], error: error});
+    res.render("error", {user: users[req.currentUser], error: error})
   } else if (!pass) {
     res.status(403)
     let error = "Password is not correct."
-    res.render("error", {user: users[req.currentUser], error: error});
+    res.render("error", {user: users[req.currentUser], error: error})
   } else {
     req.session.user_id = id
     res.redirect("/urls")
@@ -253,18 +253,18 @@ app.post("/register", (req, res) => {
       if (users[key].email === req.body.email) {
         return  emailExists = true
       }
-  });
+  })
 
   if (!req.body.email || !req.body.password) {
     res.status(400)
     let error = "The email or password fields is empty."
-    res.render("error", {user: users[req.currentUser], error: error});
+    res.render("error", {user: users[req.currentUser], error: error})
   } else if (emailExists){
     res.status(400)
     let error = "This email address is already registred."
-    res.render("error", {user: users[req.currentUser], error: error});
+    res.render("error", {user: users[req.currentUser], error: error})
   } else {
-    let id = generateRandomString(8,users);
+    let id = generateRandomString(8,users)
     users[id] = {
         id : id,
         email: req.body.email,
@@ -282,7 +282,7 @@ app.post("/logout", (req, res) => {
       if (users[key].email === req.body.email) {
         id = key
       }
-  });
+  })
   req.session = null
   res.redirect("/login")
 })
