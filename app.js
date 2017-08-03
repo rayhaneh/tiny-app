@@ -1,12 +1,11 @@
 // This file holds the express server setup
-const express = require("express")
-const app = express()
-const cookieSession = require('cookie-session')
-const bodyParser = require("body-parser")
-const expressSanitizer    = require("express-sanitizer")
-// const uuidv4 = require('uuid/v4')
-const bcrypt = require('bcrypt');
-const PORT = process.env.PORT || 8080 // default port 8080
+const express           = require("express")
+const app               = express()
+const cookieSession     = require('cookie-session')
+const bodyParser        = require("body-parser")
+const expressSanitizer  = require("express-sanitizer")
+const bcrypt            = require('bcrypt');
+const PORT              = process.env.PORT || 8080
 
 app.set('view engine', 'ejs')
 
@@ -20,11 +19,7 @@ app.use(cookieSession({
   keys: ['abcdefghijklmnopqrstuvwxyz0123456789']
 }))
 app.use(express.static(__dirname + '/public'));
-
-
-
 app.use(require("./authentication.js"))
-
 
 
 
@@ -38,10 +33,7 @@ app.get("/", (req, res) => {
   res.redirect("/urls")
 })
 
-//
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase)
-// })
+
 
 // INDEX ROUTE
 app.get("/urls", (req, res) => {
