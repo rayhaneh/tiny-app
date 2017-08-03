@@ -23,36 +23,7 @@ app.use(express.static(__dirname + '/public'));
 
 
 
-app.use((req, res, next) => {
-
-  const currentUser = req.session.user_id
-  const byPath = ["/login", "/register"]
-
-  console.log("Request Path",req.path, req.method)
-
-  if (req.path.substring(0,3) === '/u/') {
-    next()
-    return
-  }
-  else {
-    if (!currentUser) {
-      if (byPath.indexOf(req.path) === -1) res.redirect("/login")
-      next()
-      return
-    }
-    else {
-      req.currentUser = currentUser
-      if (byPath.indexOf(req.path) !== -1) {
-        res.redirect("/urls")
-        console.log("here")
-        return
-      }
-      console.log("after")
-      next()
-      return
-    }
-  }
-})
+app.use(require("./authentication.js"))
 
 
 
@@ -244,7 +215,7 @@ app.post("/register", (req, res) => {
         password: bcrypt.hashSync(req.body.password,10)
       }
     // Comment out this line if you want them to
-    // req.session.user_id = id
+    req.session.user_id = id
     res.redirect("/login")
   }
 })
