@@ -19,12 +19,14 @@ app.use(express.static(__dirname + '/public'));
 
 
 
-let loggedInUser
 app.use((req, res, next) => {
-  if (req.session.user_id) {
-    loggedInUser = req.session.user_id
-  } else {
-    loggedInUser = ""
+  const currentUser = req.session.user_id
+  if (currentUser) {
+    req.currentUser = currentUser
+  }
+  else {
+    const byPath = ["/login", "/register"]
+    if (byPath.indexOf(req.path) === -1) res.redirect("/login")
   }
   next()
 })
@@ -82,7 +84,7 @@ app.get("/urls", (req, res) => {
 // NEW ROUTE
 app.get("/urls/new", (req, res) => {
   let user_id = req.session.user_id
-  if (loggedInUser) {
+  if (req.currentUser) {
     res.render("urls_new",{user : users[user_id]});
   } else {
     res.render("login", {user : users[user_id]})
@@ -96,7 +98,7 @@ app.post("/urls", (req, res) => {
   let shortURL = generateRandomString(6)
   urlDatabase[shortURL] = {
     longURL: longURL,
-    userID: loggedInUser
+    userID: req.currentUser
   }
   res.redirect('/urls'); // Should it redirect to the new record's page?
 })
@@ -107,7 +109,7 @@ app.get("/urls/:id", (req, res) => {
   let shortURL = req.params.id
   console.log(user_id,shortURL)
   let longURL =  urlDatabase[req.params.id].longURL
-  if (loggedInUser === urlDatabase[shortURL].userID) {
+  if (req.currentUser === urlDatabase[shortURL].userID) {
     let templateVars = {
           shortURL: shortURL,
           longURL: longURL,
@@ -123,7 +125,7 @@ app.get("/urls/:id", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   // So what if two users add the same link??
   let shortURL = req.params.id
-  if (loggedInUser === urlDatabase[shortURL].userID) {
+  if (req.currentUser === urlDatabase[shortURL].userID) {
     urlDatabase[shortURL].longURL = req.body.longURL
     res.redirect("/urls");
   } else {
@@ -134,8 +136,8 @@ app.post("/urls/:id", (req, res) => {
 // DESTROY ROUTE (Shouldn't the route be /urls/:id and the verb delete?)
 app.post("/urls/:id/delete", (req,res) => {
   let shortURL = req.params.id
-  console.log(loggedInUser,shortURL,urlDatabase[shortURL])
-  if (loggedInUser === urlDatabase[shortURL].userID){
+  console.log(req.currentUser,shortURL,urlDatabase[shortURL])
+  if (req.currentUser === urlDatabase[shortURL].userID){
     delete urlDatabase[shortURL]
     res.redirect("/urls")
   } else {
@@ -240,7 +242,7 @@ function generateRandomString(length) {
 function urlsForUser(id) {
   let userURLs = {}
   for (let url in urlDatabase) {
-    if (urlDatabase[url].userID === loggedInUser) {
+    if (urlDatabase[url].userID === id) {
       userURLs[url] = urlDatabase[url]
     }
   }
