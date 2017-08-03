@@ -1,0 +1,17 @@
+{
+  "f83e2tny": {
+    "id": "f83e2tny",
+    "email": "user@example.com",
+    "password": "$2a$10$bOPX2gFGLE8FpEJHYp/WM.ZjKcv0i/qolRuw64NK8rN8Lg4GDXOs."
+  },
+ "6m7vxy5p": {
+    "id": "6m7vxy5p",
+    "email": "user2@example.com",
+    "password": "$2a$10$ytvq6lwHOY2/UuqYU7JrIezopG0WeGI48xn.eyM9jJMqT2JLFziEy"
+  },
+   "5opu9x5n": {
+    "id": "5opu9x5n",
+    "email": "test@email.com",
+    "password": "$2a$10$.P/in.uHjOq7BMREgpMnjecU4UDCNRtEA0YwkIOthGw2Ut4EDkHT."
+  }
+}

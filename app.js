@@ -23,6 +23,10 @@ app.use(express.static(__dirname + '/public'));
 
 app.use((req, res, next) => {
 
+  if (req.path.substring(0,3) === '/u/') {
+    next()
+    return
+  }
   const currentUser = req.session.user_id
   // To Use the App Log in or Register
   const byPath = ["/login", "/register"]
@@ -51,26 +55,7 @@ const urlDatabase = {
   }
 }
 
-const users = {
-  "f83e2tny": {
-    id: "f83e2tny",
-    email: "user@example.com",
-    //password: "purple-monkey-dinosaur"
-    password: "$2a$10$bOPX2gFGLE8FpEJHYp/WM.ZjKcv0i/qolRuw64NK8rN8Lg4GDXOs."
-  },
- "6m7vxy5p": {
-    id: "6m7vxy5p",
-    email: "user2@example.com",
-    // password: "dishwasher-funk"
-    password: "$2a$10$ytvq6lwHOY2/UuqYU7JrIezopG0WeGI48xn.eyM9jJMqT2JLFziEy"
-  },
-   "5opu9x5n": {
-    id: "5opu9x5n",
-    email: "test@email.com",
-    // password: "test"
-    password: "$2a$10$.P/in.uHjOq7BMREgpMnjecU4UDCNRtEA0YwkIOthGw2Ut4EDkHT."
-  }
-}
+const users = require("./users.json")
 
 
 // ROOT ROUTE
@@ -163,8 +148,15 @@ app.post("/urls/:id/delete", (req,res) => {
 // REDIRECTION ROUTE
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
-  let longURL  = urlDatabase[shortURL].longURL
-  res.redirect(longURL)
+  if (!urlDatabase[shortURL]) {
+    res.status(404)
+    let error = 'The link you are looking for does not exist';
+    res.render("error", {user: {}, error: error});
+  }
+  else {
+    let longURL  = urlDatabase[shortURL].longURL
+    res.redirect(longURL)
+  }
 })
 
 // USER LOGIN ROUTE
