@@ -1,15 +1,16 @@
-// This file holds the express server setup
-const express           = require("express")
-const app               = express()
-const cookieSession     = require('cookie-session')
-const bodyParser        = require("body-parser")
-const expressSanitizer  = require("express-sanitizer")
-const bcrypt            = require('bcrypt');
-const PORT              = process.env.PORT || 8080
-
+// NODE PACKAGES
+const express               = require("express")
+const app                   = express()
+const cookieSession         = require('cookie-session')
+const bodyParser            = require("body-parser")
+const expressSanitizer      = require("express-sanitizer")
+const bcrypt                = require('bcrypt');
+const PORT                  = process.env.PORT || 8080
 app.set('view engine', 'ejs')
 
-
+// MY MODULES
+const generateRandomString  = require("./generateRandomString")
+const urlsForUser           = require("./urlsForUser")
 
 // Middlewares
 app.use(bodyParser.urlencoded({extended: true}));
@@ -37,7 +38,7 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   const templateVars = {
     user : users[req.currentUser],
-    urls: urlsForUser(req.currentUser)
+    urls: urlsForUser(req.currentUser,urlDatabase)
   }
   res.render("urls_index", templateVars);
 })
@@ -221,28 +222,11 @@ app.post("/register", (req, res) => {
 })
 
 
-function generateRandomString(length,database) {
-  let randomString  = ""
-  const possible      = "abcdefghijklmnopqrstuvwxyz0123456789"
-  do {
-    for(var i = 0; i < length; i++) {
-      randomString += possible.charAt(Math.floor(Math.random() * possible.length))
-    }
-  } while (database[randomString])
-  return randomString
-}
 
 
 
-function urlsForUser(id) {
-  let userURLs = {}
-  for (let url in urlDatabase) {
-    if (urlDatabase[url].userID === id) {
-      userURLs[url] = urlDatabase[url]
-    }
-  }
-  return userURLs
-}
+
+
 
 
 // APP LISTENER
