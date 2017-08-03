@@ -50,6 +50,7 @@ input {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 14px;
 }
 
 button {
@@ -64,7 +65,7 @@ button {
     font-size: 18px;
 }
 button i {
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 
@@ -87,6 +88,9 @@ button i {
 }
 table{
   width: 100%;
+  border: none;
+    border-collapse: collapse;
+
 }
 .editButton{
   background-color: #f1563e;
@@ -98,6 +102,9 @@ table{
 }
 .editButton:hover {
     background-color: #1D9092;
+}
+.editButton i {
+  margin-right: 20px;
 }
 .deleteButton{
   background-color: #f1563e;
@@ -112,9 +119,18 @@ table{
     background-color: #1D9092;
 }
 td{
-  text-align: center
+  text-align: center;
+  border: none;
+
+    border-collapse: collapse;
+
 }
 
+tr:nth-child(2n){
+  background-color: white;
+  border: none;
+  border-collapse: collapse;
+}
 #newURLLink{
   text-align:center;
 }
