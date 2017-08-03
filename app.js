@@ -1,7 +1,7 @@
 // This file holds the express server setup
 const express = require("express")
 const app = express()
-const cookieParser = require('cookie-parser')
+const cookieSession = require('cookie-session')
 const bodyParser = require("body-parser")
 const expressSanitizer    = require("express-sanitizer")
 const uuidv4 = require('uuid/v4')
@@ -11,11 +11,15 @@ const PORT = process.env.PORT || 8080 // default port 8080
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()) // should always go after the bodyparser
-app.use(cookieParser())
+app.use(cookieSession({
+  name: 'session',
+  keys: ['abcdefghijklmnopqrstuvwxyz0123456789']
+}))
+
 
 let loggedInUser
 app.use((req, res, next) => {
-  userID = req.cookies["user_id"]
+  userID = req.session.user_id
   if (userID) {
     loggedInUser = userID
   } else {
@@ -70,13 +74,13 @@ app.get("/urls.json", (req, res) => {
 
 // INDEX ROUTE
 app.get("/urls", (req, res) => {
-  let user_id = req.cookies["user_id"]
+  let user_id = req.session.user_id
   res.render("urls_index", {user : users[user_id], urls: urlsForUser(user_id)});
 })
 
 // NEW ROUTE
 app.get("/urls/new", (req, res) => {
-  let user_id = req.cookies["user_id"]
+  let user_id = req.session.user_id
   if (loggedInUser) {
     res.render("urls_new",{user : users[user_id]});
   } else {
@@ -98,7 +102,7 @@ app.post("/urls", (req, res) => {
 
 // SHOW ROUTE and EDIT ROUTE (Shouldn't the edit route be /urls/:id/edit?)
 app.get("/urls/:id", (req, res) => {
-  let user_id = req.cookies["user_id"]
+  let user_id = req.session.user_id
   let shortURL = req.params.id
   let longURL =  urlDatabase[req.params.id].longURL
   if (loggedInUser === urlDatabase[shortURL].userID) {
@@ -128,7 +132,8 @@ app.post("/urls/:id", (req, res) => {
 // DESTROY ROUTE (Shouldn't the route be /urls/:id and the verb delete?)
 app.post("/urls/:id/delete", (req,res) => {
   let shortURL = req.params.id
-  if (loggedInUser === shortURL){
+  console.log(loggedInUser,shortURL,urlDatabase[shortURL])
+  if (loggedInUser === urlDatabase[shortURL].userID){
     delete urlDatabase[shortURL]
     res.redirect("/urls")
   } else {
@@ -145,7 +150,7 @@ app.get("/u/:id", (req, res) => {
 
 // USER LOGIN ROUTE
 app.get("/login", (req, res) => {
-  let user_id = req.cookies["user_id"]
+  let user_id = req.session.user_id
   res.render("login", {user : users[user_id]})
 })
 
@@ -168,7 +173,7 @@ app.post("/login", (req, res) => {
   } else if (!pass) {
     res.status(403).send('Password is not correct');
   } else {
-    res.cookie("user_id",id)
+    req.session.user_id = id
     res.redirect("/urls")
   }
 })
@@ -181,13 +186,13 @@ app.post("/logout", (req, res) => {
         id = key
       }
   });
-  res.clearCookie("user_id",id)
+  req.session = null
   res.redirect("/urls")
 })
 
 // USER REGISTRATION ROUTE
 app.get("/register", (req, res) => {
-  let user_id = req.cookies["user_id"]
+  let user_id = req.session.user_id
   let templateVars = {
         user : users[user_id]
   };
@@ -211,7 +216,7 @@ app.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password
       }
-    res.cookie("user_id",id)
+    req.session.user_id = id
     res.redirect("/urls")
   }
 })
