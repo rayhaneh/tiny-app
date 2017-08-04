@@ -1,5 +1,11 @@
 // This function generate a random string
-// Used to generate user ids and url ids
+// Used to generate:
+//    - user ids (8 characters),
+//    - url ids (6 characters),
+//    - visitor ids (4 characters)
+
+// To Generate a unique id:
+// the function checks if the generated id exists in the database
 module.exports = function generateRandomString(length,database) {
   let randomString  = ""
   const possible      = "abcdefghijklmnopqrstuvwxyz0123456789"
