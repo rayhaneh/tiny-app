@@ -50,7 +50,7 @@ app.get("/", (req, res) => {
 })
 
 
-// INDEX ROUTE
+// BROWSE ROUTE (SHOWS ALL SHORT AND LONG URLS PAIRS)
 app.get("/urls", (req, res) => {
   // If logged in, show all the user's URLs
   if (req.currentUser) {
@@ -68,7 +68,7 @@ app.get("/urls", (req, res) => {
 })
 
 
-// CREATE ROUTE
+// CREATE FORM ROUTE (SHOWS A FORM TO CREATE A NEW SHORT URL)
 app.get("/urls/new", (req, res) => {
   // If logged in, go to the create a new tiny URL page
   if (req.currentUser) {
@@ -81,7 +81,7 @@ app.get("/urls/new", (req, res) => {
 })
 
 
-// SHOW ROUTE and EDIT ROUTE
+// READ ROUTE (SHOWS A SINGLE SHORT AND LONG URL PAIR)
 app.get("/urls/:id", (req, res) => {
   // If logged in ...
   if (req.currentUser){
@@ -115,7 +115,8 @@ app.get("/urls/:id", (req, res) => {
   }
 })
 
-// REDIRECTION ROUTE
+
+// REDIRECTION ROUTE (REDIRECTS TO THE LONG URL GIVEN THE SHORT URL)
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
   // If the short URL is not in the database show an error message
@@ -136,7 +137,7 @@ app.get("/u/:id", (req, res) => {
 })
 
 
-// CREATE ROUTE
+// CREATE ROUTE (ADDS A NEW SHORT AND LONG URL PAIR TO THE DATABASE)
 app.post("/urls", (req, res) => {
   // If logged in ...
   if (req.currentUser) {
@@ -164,7 +165,7 @@ app.post("/urls", (req, res) => {
 })
 
 
-// UPDATE ROUTE
+// UPDATE ROUTE (UPDATES THE LONG URL FOR A GIVEN SHORT URL)
 app.put("/urls/:id", (req, res) => {
   // If logged in ...
   if (req.currentUser){
@@ -200,7 +201,7 @@ app.put("/urls/:id", (req, res) => {
 })
 
 
-// DESTROY ROUTE
+// DELETE ROUTE (DELETES A SHORT AND LONG URL PAIR FOR A GIVEN SHORT URL)
 app.delete("/urls/:id", (req,res) => {
   // If logged in ...
   if (req.currentUser){
@@ -231,7 +232,7 @@ app.delete("/urls/:id", (req,res) => {
 })
 
 
-// USER LOGIN ROUTE
+// USER LOGIN FORM ROUTE (SHOWS A LOGIN FROM TO THE USERS)
 app.get("/login", (req, res) => {
   // If not login, render login form
   if (!req.currentUser) {
@@ -244,7 +245,7 @@ app.get("/login", (req, res) => {
 })
 
 
-// USER REGISTRATION ROUTE
+// USER REGISTRATION FORM ROUTE (SHOWS A REGISTRATION ROUTE TO THE USERS)
 app.get("/register", (req, res) => {
   // If not logged in render the registration page
   if (!req.currentUser) {
@@ -260,6 +261,7 @@ app.get("/register", (req, res) => {
 })
 
 
+// USER LOGIN ROUTE (LOGINS A USER)
 app.post("/login", (req, res) => {
   let id
   let pass = false
@@ -278,7 +280,7 @@ app.post("/login", (req, res) => {
       }
     }
   })
-  // If the user is not is the database show a message
+  // If the user is not in the database show a message
   if (!id){
     res.status(403)
     let error = "User does not exist."
@@ -297,7 +299,8 @@ app.post("/login", (req, res) => {
   }
 })
 
-// USER POST REGISTER ROUTE
+
+// USER REGISTERATION ROUTE (ADD A NEW USER TO THE DATABASE)
 app.post("/register", (req, res) => {
   let emailExists = false
   // Check if the email is already in the database
@@ -331,7 +334,7 @@ app.post("/register", (req, res) => {
   }
 })
 
-// USER LOGOUT ROUTE
+// USER LOGOUT ROUTE (LOGOUTS A USER)
 app.post("/logout", (req, res) => {
   let id
   // Find the user in the database
