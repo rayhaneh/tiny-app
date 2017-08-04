@@ -295,6 +295,18 @@ app.post("/logout", (req, res) => {
 })
 
 
+app.get("*", (req, res) => {
+  res.status(404)
+  if (req.currentUser) {
+    let error = "The page you are looking for doesn't exist."
+    res.render("error", {user: users[req.currentUser], error: error})
+  }
+  else {
+    let error = "The page you are looking for doesn't exist."
+    res.render("error", {user: "", error: error})
+  }
+})
+
 
 
 
