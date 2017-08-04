@@ -266,7 +266,7 @@ app.post("/login", (req, res) => {
   // If email or password field is empty show an error message
   if (!req.body.email || !req.body.password) {
     res.status(403)
-    let error = "The email or password fields is empty."
+    let error = "The email or password field is empty."
     return res.render("error", {user: users[req.currentUser], error: error})
   }
   // Find the user in database and check if the password is valid
