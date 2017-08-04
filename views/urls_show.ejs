@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include partials/_head.ejs %>
-    </head>
-    <body class="container">
-        <header>
-            <%- include partials/_header %>
-        </header>
-
-        <main>
-            <div>
-              <h2> Short URL: <%- shortURL%></h2>
-              <form method="POST" action="/urls/<%- shortURL%>">
-                <input type="text" name="longURL" id="longURL" value="<%- longURL%>">
-                <button class="ui red basic button">Update</button>
-              </form>
-            </div>
-        </main>
-        <footer>
-             <% include partials/_footer %>
-        </footer>
-    </body>
+  <head>
+    <%- include partials/_head.ejs %>
+  </head>
+  <body class="container">
+    <header>
+      <%- include partials/_header %>
+    </header>
+    <main>
+      <div>
+        <h2> Short URL: <%- shortURL%></h2>
+        <form method="POST" action="/urls/<%- shortURL%>">
+          <input type="text" name="longURL" id="longURL" value="<%- longURL%>">
+          <button class="ui red basic button">Update</button>
+        </form>
+      </div>
+    </main>
+  </body>
 </html>
 
 

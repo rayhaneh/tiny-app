@@ -1,35 +1,27 @@
 <!-- views/partials/_header.ejs -->
-
 <div class="container">
-    <div class="logo">
-        <h1 class="brand"><i class="fa fa-external-link-square" aria-hidden="true"></i> TinyApp</h1>
-    </div>
-    <div class="heading">
-        <% if (!user) {%>
-            <a class="logButton" href="/login">Login</a>
-            <a class="logButton" href="/register">Register</a>
-        <% } else { %>
-            <table>
-                <tr>
-                    <td style="width: 55%; text-align:left">
-                       Logged in as: <%- user.email %>
-                    </td>
-                    <td style="width: 25%"">
-                        <a id="myTinyURLs" href="/urls">My Tiny URLs</a>
-                    </td>
-                    <td style="width: 20%"">
-                        <form  id="logoutForm" action="/logout" method="POST">
-                            <input type="hidden" name="username" id="username" value="<%- user.email %>">
-                            <input id="logoutButton" type="submit" value="Logout">
-                        </form>
-                    </td>
-                </tr>
-            </table>
-
-
-        <% } %>
-    </div>
-
+  <div class="logo">
+    <h1 class="brand"><i class="fa fa-external-link-square" aria-hidden="true"></i> TinyApp</h1>
+  </div>
+  <div class="heading">
+  <% if (!user) {%>
+    <a class="logButton" href="/login">Login</a>
+    <a class="logButton" href="/register">Register</a>
+  <% } else { %>
+    <table>
+      <tr>
+        <td id="headeEmail">Logged in as: <%- user.email %></td>
+        <td class="headerLink"><a id="myTinyURLs" href="/urls">My Tiny URLs</a></td>
+        <td class="headerLink">
+          <form  id="logoutForm" action="/logout" method="POST">
+            <input type="hidden" name="username" id="username" value="<%- user.email %>">
+            <input id="logoutButton" type="submit" value="Logout">
+          </form>
+        </td>
+      </tr>
+    </table>
+  <% } %>
+  </div>
 </div>
 
 

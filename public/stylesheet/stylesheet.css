@@ -133,10 +133,6 @@ tr:nth-child(2n){
 .deleteButton:hover {
     background-color: #C54633;
 }
-
-
-
-
 #newURLLink{
   text-align:center;
 }
@@ -160,3 +156,13 @@ tr:nth-child(2n){
   background-color: #1D9092;
   color: white;
 }
+#headerEmail{
+  width: 55%;
+  text-align:left
+}
+.headerLink {
+  width: 25%;
+}
+
+
+

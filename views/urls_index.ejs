@@ -1,39 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include partials/_head.ejs %>
-    </head>
-    <body class="container">
-        <header>
-            <%- include partials/_header %>
-        </header>
-
-        <main>
-            <h3>My Tiny URLs:</h3>
-              <table>
-                <% for (let url in urls ) { %>
-                    <tr>
-                        <td><%- url%></td>
-                        <td><%-urls[url].longURL%></td>
-                        <td>
-                            <a class="editButton" href="/urls/<%=url%>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-Edit</a>
-                        </td>
-                        <td>
-                            <form method="POST" action="/urls/<%- url%>/delete">
-                                <button class="deleteButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                <% } %>
-              </table>
-            <h3 id="newURLLink"><a href="/urls/new"><i class="fa fa-plus" aria-hidden="true"></i> Make a New TinyURL</a> </h3>
-
-        </main>
-
-        <footer>
-             <% include partials/_footer %>
-        </footer>
-
-    </body>
+  <head>
+    <%- include partials/_head.ejs %>
+  </head>
+  <body class="container">
+    <header>
+      <%- include partials/_header %>
+    </header>
+    <main>
+      <h3>My Tiny URLs:</h3>
+      <table>
+      <% for (let url in urls ) { %>
+        <tr>
+          <td><%- url%></td>
+          <td><%-urls[url].longURL%></td>
+          <td> <a class="editButton" href="/urls/<%=url%>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a></td>
+          <td>
+            <form method="POST" action="/urls/<%- url%>/delete">
+                <button class="deleteButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+      </table>
+      <h3 id="newURLLink"><a href="/urls/new"><i class="fa fa-plus" aria-hidden="true"></i> Make a New TinyURL</a> </h3>
+    </main>
+    <footer>
+      <% include partials/_footer %>
+    </footer>
+  </body>
 </html>

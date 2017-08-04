@@ -1,3 +1,5 @@
+// This function generate a random string
+// Used to generate user ids and url ids
 module.exports = function generateRandomString(length,database) {
   let randomString  = ""
   const possible      = "abcdefghijklmnopqrstuvwxyz0123456789"
