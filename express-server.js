@@ -132,6 +132,10 @@ app.get("/u/:id", (req, res) => {
     if ((longURL.substring(0,7) !== "http://") && (longURL.substring(0,7) !== "https://")) {
       longURL = `http://${longURL}`
     }
+    urlDatabase[shortURL].visits.push({
+      time: Date.now(),
+      IP  : req.ip
+    })
     res.redirect(longURL)
   }
 })
