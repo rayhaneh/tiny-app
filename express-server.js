@@ -16,6 +16,7 @@ const urlsForUser           = require("./urlsForUser")
 
 // Middlewares
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(methodOverride('_method'))
 app.use(cookieSession({
   name: 'session',
   keys: ['abcdefghijklmnopqrstuvwxyz0123456789']
