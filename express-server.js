@@ -125,6 +125,10 @@ app.get("/u/:id", (req, res) => {
   // else redirect to the corresponding long URL
   else {
     let longURL  = urlDatabase[shortURL].longURL
+    console.log()
+    if ((longURL.substring(0,7) !== "http://") && (longURL.substring(0,7) !== "https://")) {
+      longURL = `http://${longURL}`
+    }
     res.redirect(longURL)
   }
 })
