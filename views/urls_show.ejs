@@ -10,10 +10,27 @@
     <main>
       <div>
         <h2> Short URL: <%- shortURL%></h2>
+        <p><strong> Number of Total Visits:</strong> <%- allVisits.length%></p>
+        <p><strong> Number of Unique Visits: </strong><%- uniqueVisits%></p>
         <form method="POST" action="/urls/<%- shortURL%>?_method=PUT">
           <input type="text" name="longURL" id="longURL" value="<%- longURL%>">
           <button class="ui red basic button">Update</button>
         </form>
+        <table>
+          <tr>
+            <tr>
+              <td>Time</td>
+              <td>IP</td>
+            </tr>
+            <%allVisits.forEach(function(visit) {%>
+              <tr>
+                <td><%- visit.time%></td>
+                <td><%- visit.IP%></td>
+
+            <%})%>
+            </th>
+          </tr>
+        </table>
       </div>
     </main>
   </body>
