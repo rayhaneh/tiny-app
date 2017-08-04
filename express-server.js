@@ -106,7 +106,8 @@ app.get("/urls/:id", (req, res) => {
             longURL     : urlDatabase[req.params.id].longURL,
             user        : users[req.currentUser],
             allVisits   : urlDatabase[req.params.id].visits,
-            uniqueVisits: visitsStat(urlDatabase[req.params.id].visits)
+            uniqueVisits: visitsStat(urlDatabase[req.params.id].visits).uniqueVisits,
+            totalVisits : visitsStat(urlDatabase[req.params.id].visits).totalVisits
       }
       res.render("urls_show", templateVars)
     }
@@ -122,6 +123,11 @@ app.get("/urls/:id", (req, res) => {
 // REDIRECTION ROUTE (REDIRECTS TO THE LONG URL FOR A GIVEN THE SHORT URL)
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
+  let visitor_id = req.session.visitor_id
+  if (!visitor_id) {
+    visitor_id = generateRandomString(4,urlDatabase[shortURL].visits)
+    req.session.visitor_id = visitor_id
+  }
   // If the short URL is not in the database show an error message
   if (!urlDatabase[shortURL]) {
     res.status(404)
@@ -136,10 +142,13 @@ app.get("/u/:id", (req, res) => {
       longURL = `http://${longURL}`
     }
     let timeDate = new Date()
-    urlDatabase[shortURL].visits.push({
-      time: timeDate.toUTCString(),
-      IP  : req.ip
-    })
+    timeDate     = timeDate.toUTCString();
+    if (urlDatabase[shortURL].visits[visitor_id]) {
+      urlDatabase[shortURL].visits[visitor_id].push(timeDate)
+    }
+    else {
+      urlDatabase[shortURL].visits[visitor_id] = [timeDate]
+    }
     res.redirect(longURL)
   }
 })
