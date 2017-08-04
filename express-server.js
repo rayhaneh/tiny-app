@@ -9,7 +9,7 @@ const PORT                  = process.env.PORT || 8080
 app.set('view engine', 'ejs')
 
 
-// MY MODULES
+// MODULES
 const generateRandomString  = require("./generateRandomString")
 const urlsForUser           = require("./urlsForUser")
 const visitsStat            = require("./visitsStat")
@@ -105,7 +105,9 @@ app.get("/urls/:id", (req, res) => {
             shortURL    : shortURL,
             longURL     : urlDatabase[req.params.id].longURL,
             user        : users[req.currentUser],
+            // List of all visits
             allVisits   : urlDatabase[req.params.id].visits,
+            // Passing the visits object in the urlDatabase to visitsStat
             uniqueVisits: visitsStat(urlDatabase[req.params.id].visits).uniqueVisits,
             totalVisits : visitsStat(urlDatabase[req.params.id].visits).totalVisits
       }
@@ -323,7 +325,7 @@ app.post("/register", (req, res) => {
   // Check if the email is already in the database
   Object.keys(users).forEach(function(key) {
       if (users[key].email === req.body.email) {
-        return  emailExists = true
+        return emailExists = true
       }
   })
   // If email or password field is empty show a error message
@@ -344,6 +346,7 @@ app.post("/register", (req, res) => {
     users[id] = {
         id : id,
         email: req.body.email,
+        // Hashes the password
         password: bcrypt.hashSync(req.body.password,10)
       }
     req.session.user_id = id
