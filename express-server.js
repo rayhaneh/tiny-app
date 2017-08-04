@@ -12,6 +12,7 @@ app.set('view engine', 'ejs')
 // MY MODULES
 const generateRandomString  = require("./generateRandomString")
 const urlsForUser           = require("./urlsForUser")
+const visitsStat            = require("./visitsStat")
 
 
 // Middlewares
@@ -101,9 +102,11 @@ app.get("/urls/:id", (req, res) => {
     // ... update the record in the database
     else {
       let templateVars = {
-            shortURL: shortURL,
-            longURL : urlDatabase[req.params.id].longURL,
-            user    : users[req.currentUser]
+            shortURL    : shortURL,
+            longURL     : urlDatabase[req.params.id].longURL,
+            user        : users[req.currentUser],
+            allVisits   : urlDatabase[req.params.id].visits,
+            uniqueVisits: visitsStat(urlDatabase[req.params.id].visits)
       }
       res.render("urls_show", templateVars)
     }
@@ -116,7 +119,7 @@ app.get("/urls/:id", (req, res) => {
 })
 
 
-// REDIRECTION ROUTE (REDIRECTS TO THE LONG URL GIVEN THE SHORT URL)
+// REDIRECTION ROUTE (REDIRECTS TO THE LONG URL FOR A GIVEN THE SHORT URL)
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
   // If the short URL is not in the database show an error message
@@ -132,8 +135,9 @@ app.get("/u/:id", (req, res) => {
     if ((longURL.substring(0,7) !== "http://") && (longURL.substring(0,7) !== "https://")) {
       longURL = `http://${longURL}`
     }
+    let timeDate = new Date()
     urlDatabase[shortURL].visits.push({
-      time: Date.now(),
+      time: timeDate.toUTCString(),
       IP  : req.ip
     })
     res.redirect(longURL)
