@@ -1,14 +1,12 @@
 module.exports = function(visits) {
+
   // An array of visitor ids
-  let uniqueVisits = []
+  let uniqueVisits = Object.keys(visits).length
+
   // Total number of visistors
   let totalVisits    = 0
-
   for (let visitor_id in visits) {
     totalVisits += visits[visitor_id].length
-    if (!uniqueVisits.includes(visitor_id)){
-      uniqueVisits.push(visitor_id)
-    }
   }
-  return {totalVisits: totalVisits, uniqueVisits: uniqueVisits.length}
+  return {totalVisits: totalVisits, uniqueVisits: uniqueVisits}
 }
