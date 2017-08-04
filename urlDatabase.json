@@ -7,10 +7,10 @@
   "9sm5xK": {
     "longURL": "http://www.google.com",
     "userID":  "5opu9x5n",
-    "visits": [
-        { "time": "Tue, 01 Aug 2017 13:05:03 GMT", "IP": "127.10.101.123" },
-        { "time": "Wed, 02 Aug 2017 12:37:26 GMT", "IP": "66.207.221.230" },
-        { "time": "Thu, 03 Aug 2017 11:31:52 GMT", "IP": "198.01.221.142" },
-        { "time": "Fri, 04 Aug 2017 10:22:28 GMT", "IP": "198.01.221.142"} ]
+    "visits": {
+      "b233" : ["Tue, 01 Aug 2017 13:05:03 GMT", "Fri, 04 Aug 2017 10:22:28 GMT"],
+      "1fx4" : ["Wed, 02 Aug 2017 12:37:26 GMT"],
+      "4fgd" : ["Thu, 03 Aug 2017 11:31:52 GMT"]
+    }
   }
 }
