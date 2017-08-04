@@ -10,7 +10,7 @@
     <main>
       <div>
         <h2> Short URL: <%- shortURL%></h2>
-        <p><strong> Number of Total Visits:</strong> <%- allVisits.length%></p>
+        <p><strong> Number of Total Visits:</strong> <%- totalVisits%></p>
         <p><strong> Number of Unique Visits: </strong><%- uniqueVisits%></p>
         <form method="POST" action="/urls/<%- shortURL%>?_method=PUT">
           <input type="text" name="longURL" id="longURL" value="<%- longURL%>">
@@ -18,16 +18,18 @@
         </form>
         <table>
           <tr>
-            <tr>
+            <tr class="timeDate">
+              <td>Visitor's ID</td>
               <td>Time</td>
-              <td>IP</td>
             </tr>
-            <%allVisits.forEach(function(visit) {%>
-              <tr>
-                <td><%- visit.time%></td>
-                <td><%- visit.IP%></td>
-
-            <%})%>
+            <%for (let visitor_id in allVisits) {%>
+              <%allVisits[visitor_id].forEach(function(timeDate) {%>
+                <tr>
+                  <td><%- visitor_id%></td>
+                  <td><%- timeDate%></td>
+                </tr>
+              <%})%>
+            <%}%>
             </th>
           </tr>
         </table>
