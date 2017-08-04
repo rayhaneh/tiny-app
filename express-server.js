@@ -165,7 +165,7 @@ app.post("/urls", (req, res) => {
 
 
 // UPDATE ROUTE
-app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   // If logged in ...
   if (req.currentUser){
     let shortURL = req.params.id

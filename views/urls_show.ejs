@@ -10,7 +10,7 @@
     <main>
       <div>
         <h2> Short URL: <%- shortURL%></h2>
-        <form method="POST" action="/urls/<%- shortURL%>">
+        <form method="POST" action="/urls/<%- shortURL%>?_method=PUT">
           <input type="text" name="longURL" id="longURL" value="<%- longURL%>">
           <button class="ui red basic button">Update</button>
         </form>
