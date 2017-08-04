@@ -9,11 +9,24 @@
             <a class="logButton" href="/login">Login</a>
             <a class="logButton" href="/register">Register</a>
         <% } else { %>
-            <span>Logged in as: <%- user.email %></span>
-            <form  id="logoutForm" action="/logout" method="POST">
-                <input type="hidden" name="username" id="username" value="<%- user.email %>">
-                <input id="logoutButton" type="submit" value="Logout">
-            </form>
+            <table>
+                <tr>
+                    <td style="width: 55%; text-align:left">
+                       Logged in as: <%- user.email %>
+                    </td>
+                    <td style="width: 25%"">
+                        <a id="myTinyURLs" href="/urls">My Tiny URLs</a>
+                    </td>
+                    <td style="width: 20%"">
+                        <form  id="logoutForm" action="/logout" method="POST">
+                            <input type="hidden" name="username" id="username" value="<%- user.email %>">
+                            <input id="logoutButton" type="submit" value="Logout">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+
         <% } %>
     </div>
 

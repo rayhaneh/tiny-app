@@ -22,7 +22,6 @@ app.use(cookieSession({
 app.use(express.static("public"))
 
 app.use((req, res, next) => {
-
   const currentUser = req.session.user_id
   req.currentUser   = currentUser
   next()
@@ -99,7 +98,7 @@ app.get("/urls/:id", (req, res) => {
   }
   else {
     const error = "You should login to visit this page."
-    res.redirect("error", {user: "", error: error})
+    res.render("error", {user: "", error: error})
   }
 })
 
@@ -108,7 +107,7 @@ app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id
   if (!urlDatabase[shortURL]) {
     res.status(404)
-    let error = 'The short URL you are looking for does not exist'
+    let error = 'The short URL you are looking for does not exist.'
     res.render("error", {user: users[req.currentUser], error: error})
   }
   else {
@@ -122,16 +121,22 @@ app.get("/u/:id", (req, res) => {
 app.post("/urls", (req, res) => {
   if (req.currentUser) {
     let longURL  = req.body.longURL
-    let shortURL = generateRandomString(6,urlDatabase)
-    urlDatabase[shortURL] = {
-      longURL: longURL,
-      userID: req.currentUser
+    if (!longURL) {
+      const error = "Please enter a URL."
+      res.render("error", {user: "", error: error})
     }
-    res.redirect(`/urls/${shortURL}`)
+    else {
+      let shortURL = generateRandomString(6,urlDatabase)
+      urlDatabase[shortURL] = {
+        longURL: longURL,
+        userID: req.currentUser
+      }
+      res.redirect(`/urls/${shortURL}`)
+    }
   }
   else {
     const error = "You should login to visit this page."
-    res.redirect("error", {user: "", error: error})
+    res.render("error", {user: "", error: error})
   }
 })
 
@@ -143,12 +148,16 @@ app.post("/urls/:id", (req, res) => {
 
     if (!urlDatabase[shortURL]) {
       res.status(404)
-      let error = "The ShortURL does not exist"
+      let error = "The ShortURL does not exist."
       res.render("error", {user: users[req.currentUser], error: error})
     }
     else if (req.currentUser !== urlDatabase[shortURL].userID) {
       res.status(404)
-      let error = "You are not the owner of this short URL"
+      let error = "You are not the owner of this short URL."
+      res.render("error", {user: users[req.currentUser], error: error})
+    }
+    else if (!req.body.longURL) {
+      let error = "Please enter a URL."
       res.render("error", {user: users[req.currentUser], error: error})
     }
     else {
@@ -158,7 +167,7 @@ app.post("/urls/:id", (req, res) => {
   }
   else {
     const error = "You should login to visit this page."
-    res.redirect("error", {user: "", error: error})
+    res.render("error", {user: "", error: error})
   }
 })
 
@@ -166,16 +175,15 @@ app.post("/urls/:id", (req, res) => {
 // DESTROY ROUTE (Shouldn't the route be /urls/:id and the verb delete?)
 app.post("/urls/:id/delete", (req,res) => {
   if (req.currentUser){
-    console.log('1',req.currentUser)
     let shortURL = req.params.id
     if (!urlDatabase[shortURL]) {
       res.status(404)
-      let error = "The ShortURL does not exist"
+      let error = "The ShortURL does not exist."
       res.render("error", {user: users[req.currentUser], error: error})
     }
     else if (req.currentUser !== urlDatabase[shortURL].userID){
       res.status(404)
-      let error = "You are not the owner of this short URL"
+      let error = "You are not the owner of this short URL."
       res.render("error", {user: users[req.currentUser], error: error})
     }
     else {
@@ -184,7 +192,6 @@ app.post("/urls/:id/delete", (req,res) => {
     }
   }
   else {
-    console.log('2',req.currentUser)
     const error = "You should login to visit this page."
     res.render("error", {user: "", error: error})
   }
@@ -291,13 +298,7 @@ app.post("/logout", (req, res) => {
 
 
 
-
-
-
-
-
-
 // APP LISTENER
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`)
+  console.log(`TinyApp is listening on port ${PORT}!`)
 })
