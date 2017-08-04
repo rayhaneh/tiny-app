@@ -1,10 +1,15 @@
 {
   "b2xVn2": {
     "longURL": "http://www.lighthouselabs.ca",
-    "userID":  "f83e2tny"
+    "userID":  "f83e2tny",
+    "visits": []
   },
   "9sm5xK": {
     "longURL": "http://www.google.com",
-    "userID":  "5opu9x5n"
+    "userID":  "5opu9x5n",
+    "visits": [
+        { "time": 1501863580204, "IP": "127.10.101.123" },
+        { "time": 1501863604511, "IP": "66.207.221.230" },
+        { "time": 1501863605547, "IP": "198.01.221.142"} ]
   }
 }
