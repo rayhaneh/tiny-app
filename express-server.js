@@ -4,6 +4,7 @@ const app                   = express()
 const cookieSession         = require('cookie-session')
 const bodyParser            = require("body-parser")
 const bcrypt                = require('bcrypt')
+var methodOverride          = require('method-override')
 const PORT                  = process.env.PORT || 8080
 app.set('view engine', 'ejs')
 
