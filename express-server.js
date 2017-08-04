@@ -201,7 +201,7 @@ app.post("/urls/:id", (req, res) => {
 
 
 // DESTROY ROUTE
-app.post("/urls/:id/delete", (req,res) => {
+app.delete("/urls/:id", (req,res) => {
   // If logged in ...
   if (req.currentUser){
     let shortURL = req.params.id

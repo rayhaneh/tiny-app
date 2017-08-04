@@ -16,7 +16,7 @@
           <td><%-urls[url].longURL%></td>
           <td> <a class="editButton" href="/urls/<%=url%>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a></td>
           <td>
-            <form method="POST" action="/urls/<%- url%>/delete">
+            <form method="POST" action="/urls/<%- url%>?_method=DELETE">
                 <button class="deleteButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
             </form>
           </td>
