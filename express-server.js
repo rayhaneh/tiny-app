@@ -140,11 +140,13 @@ app.get("/u/:id", (req, res) => {
   else {
     let longURL  = urlDatabase[shortURL].longURL
     // If the long url does not start with http or https add it to the url before redirecting
-    if ((longURL.substring(0,7) !== "http://") && (longURL.substring(0,7) !== "https://")) {
+    const http  = new RegExp("http://")
+    const https = new RegExp("https://")
+    if (!(longURL.match(http)) && !(longURL.match(https))) {
       longURL = `http://${longURL}`
     }
     let timeDate = new Date()
-    timeDate     = timeDate.toUTCString();
+    timeDate     = timeDate.toUTCString()
     if (urlDatabase[shortURL].visits[visitor_id]) {
       urlDatabase[shortURL].visits[visitor_id].push(timeDate)
     }
